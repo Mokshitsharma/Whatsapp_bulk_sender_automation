@@ -1,0 +1,17 @@
+{
+  "name": "whatsapp-broadcast-tool",
+  "version": "1.0.0",
+  "description": "Bulk WhatsApp campaign tool - upload CSV/XLSX, send templated messages with image + text to all contacts",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "xlsx": "^0.18.5",
+    "uuid": "^9.0.1",
+    "cors": "^2.8.5"
+  }
+}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Movigo Broadcast — WhatsApp Campaign Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div class="brand-text">
+        <div class="brand-name">Movigo Broadcast</div>
+        <div class="brand-sub">WhatsApp campaign tool</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-view="new">New campaign</button>
+      <button class="nav-item" data-view="history">History</button>
+    </nav>
+    <div class="sidebar-footer">
+      <span class="mock-pill">MOCK SEND MODE</span>
+      <p>Wire in AiSensy / Interakt in <code>services/whatsappService.js</code> when your template is approved.</p>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- VIEW: NEW CAMPAIGN -->
+    <section id="view-new" class="view active">
+
+      <div class="steps">
+        <div class="step active" data-step="1"><span>01</span>Upload list</div>
+        <div class="step" data-step="2"><span>02</span>Map columns</div>
+        <div class="step" data-step="3"><span>03</span>Compose message</div>
+        <div class="step" data-step="4"><span>04</span>Review & send</div>
+      </div>
+
+      <!-- Step 1: Upload -->
+      <div class="panel" id="panel-1">
+        <h2>Upload your contact list</h2>
+        <p class="hint">CSV or XLSX with a phone number column. Retailer or driver export works fine.</p>
+
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" hidden />
+          <div class="dropzone-inner">
+            <div class="dropzone-icon">⇧</div>
+            <div><strong>Click to upload</strong> or drag a file here</div>
+            <div class="dropzone-sub">.csv, .xlsx, .xls</div>
+          </div>
+        </label>
+
+        <div id="uploadStatus" class="upload-status"></div>
+      </div>
+
+      <!-- Step 2: Map columns -->
+      <div class="panel hidden" id="panel-2">
+        <h2>Map your columns</h2>
+        <p class="hint">Tell us which column holds the phone number, and which to use for personalization.</p>
+
+        <div class="mapping-grid" id="mappingGrid"></div>
+
+        <div class="preview-table-wrap">
+          <div class="preview-label">Preview — first 10 rows</div>
+          <div class="table-scroll">
+            <table id="previewTable"></table>
+          </div>
+          <div class="row-count" id="rowCount"></div>
+        </div>
+
+        <div class="panel-actions">
+          <button class="btn ghost" data-back="1">Back</button>
+          <button class="btn primary" id="toStep3">Continue</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Compose -->
+      <div class="panel hidden" id="panel-3">
+        <h2>Compose your message</h2>
+        <p class="hint">This mirrors a WhatsApp template: one header image, one body text with variables.</p>
+
+        <div class="compose-grid">
+          <div class="compose-form">
+            <label class="field">
+              <span>Campaign name</span>
+              <input type="text" id="campaignName" placeholder="e.g. July area-expansion promo" />
+            </label>
+
+            <label class="field">
+              <span>Template name (WhatsApp Business template)</span>
+              <input type="text" id="templateName" placeholder="e.g. area_expansion_promo" value="area_expansion_promo" />
+            </label>
+
+            <label class="field">
+              <span>Header image URL</span>
+              <input type="text" id="imageUrl" placeholder="https://... (hosted promo image)" />
+            </label>
+
+            <label class="field">
+              <span>Message body</span>
+              <textarea id="messageTemplate" rows="6" placeholder="Hi {{name}}, Movigo is now live in {{city}}! Faster deliveries, better rates. Reply to know more."></textarea>
+            </label>
+
+            <div class="variable-hint" id="variableHint"></div>
+
+            <label class="field">
+              <span>Delay between sends (ms)</span>
+              <input type="number" id="sendInterval" value="400" min="150" />
+            </label>
+          </div>
+
+          <div class="compose-preview">
+            <div class="phone-mock">
+              <div class="phone-header">Movigo</div>
+              <div class="bubble">
+                <img id="previewImg" class="bubble-img hidden" />
+                <div class="bubble-text" id="previewText">Your message preview appears here.</div>
+                <div class="bubble-time">10:42 AM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-actions">
+          <button class="btn ghost" data-back="2">Back</button>
+          <button class="btn primary" id="toStep4">Continue</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Review + send -->
+      <div class="panel hidden" id="panel-4">
+        <h2>Review & send</h2>
+
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="summary-value" id="sumTotal">0</div>
+            <div class="summary-label">Valid recipients</div>
+          </div>
+          <div class="summary-card warn">
+            <div class="summary-value" id="sumInvalid">0</div>
+            <div class="summary-label">Will be skipped</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-value" id="sumTemplate">—</div>
+            <div class="summary-label">Template name</div>
+          </div>
+        </div>
+
+        <div class="panel-actions">
+          <button class="btn ghost" data-back="3">Back</button>
+          <button class="btn send" id="sendBtn">Send broadcast →</button>
+        </div>
+
+        <div id="sendProgress" class="send-progress hidden">
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-stats">
+            <span id="progressText">Sending...</span>
+            <span id="progressCounts"></span>
+          </div>
+          <div class="log-list" id="logList"></div>
+          <a class="btn ghost small hidden" id="exportBtn" target="_blank">Export results CSV</a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VIEW: HISTORY -->
+    <section id="view-history" class="view">
+      <h2>Campaign history</h2>
+      <div id="historyList" class="history-list"></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
