@@ -1,12 +1,28 @@
-# Movigo Broadcast — WhatsApp Bulk Campaign Tool
+<!-- readme-refresh 2026-11 -->
+<div align="center">
 
+# 📣 WhatsApp Bulk Sender
+
+**Send one message with an image to a whole contact list**
+
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" /> <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" /> <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
+
+</div>
+
+## ✨ Highlights
+
+- Upload a CSV or XLSX of contacts and map the columns
+- Write one message with an image
+- Send to everyone in one click, for your own contact lists
+
+<!-- body -->
 Upload a CSV/XLSX of contacts, map the columns, write one message with an
-image, and send it to everyone in one click. Built for sending Movigo's
-retailer/driver promos, and doubles as a full-stack college project.
+image, and send it to everyone in one click. Built for sending promos to your
+own contact lists, and doubles as a full-stack college project.
 
 ## What it does
 
-1. **Upload** — drag in a `.csv` or `.xlsx` export of your retailers/drivers
+1. **Upload** — drag in a `.csv` or `.xlsx` export of your contacts
 2. **Map columns** — tell it which column is the phone number, and which to
    use for personalization (`{{name}}`, `{{city}}`)
 3. **Compose** — write the message, paste an image URL, preview it as it'll
@@ -61,12 +77,11 @@ data/campaigns.json          Campaign history (auto-created)
 ```
 
 No database setup needed — campaign history is stored in a local JSON file.
-If you want to swap this for MongoDB later (to match your Movigo stack),
+If you want to swap this for MongoDB later,
 `services/campaignStore.js` is the only file that needs to change.
 
 ## Notes for your college write-up
 
-- Solves a real problem for a live startup (Movigo) with 900+ real users
 - Full stack: file parsing (`xlsx`), REST API design, async job processing
   with progress polling, CSV export, phone number validation/normalization
 - Designed so the "send" layer is swappable — mock now, real WhatsApp
@@ -74,3 +89,7 @@ If you want to swap this for MongoDB later (to match your Movigo stack),
 - Known limitation to mention if asked: current sending loop is sequential
   with a delay; for very large lists (10k+) you'd want a proper job queue
   (e.g. BullMQ + Redis) instead of the in-memory loop used here
+
+---
+
+<div align="center"><sub>Built by <a href="https://github.com/Mokshitsharma">Mokshit Sharma</a> · <a href="https://mokshitsharma27.vercel.app/">Portfolio</a> · <a href="https://www.linkedin.com/in/mokshit-sharma-75b5ab305">LinkedIn</a></sub></div>
